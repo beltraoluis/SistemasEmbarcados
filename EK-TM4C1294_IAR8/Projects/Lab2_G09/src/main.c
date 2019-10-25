@@ -13,12 +13,19 @@
 #include "driverlib/pin_map.h"
 
 //#define BASE_FREQUENCY 24000000
-#define BASE_FREQUENCY 120000000
-#define FREQUENCY_MEGA 120
+#define BASE_FREQUENCY 24000000
+#define FREQUENCY_MEGA 24
 #define SAMPLE_SIZE 11
+#define TIMEOUT_VALUE 0xfffffff
 
 void onEdgeDown(void);
 void onEdgeUp(void);
+void onTimeOut(void);
+
+int sample_high[SAMPLE_SIZE], sample_low[SAMPLE_SIZE];   
+int high_index=0;
+int low_index=0; 
+int timeout_flag = 0;
 
 void initUART(void) { 
     SysCtlPeripheralEnable(SYSCTL_PERIPH_UART0);
@@ -44,10 +51,13 @@ void setClockFrequency(int clockFrequency){
 void initTimers(){
  /////Configurações do Timer0 -------------------------------------------------
   SysCtlPeripheralEnable(SYSCTL_PERIPH_TIMER0);
+  SysCtlPeripheralEnable(SYSCTL_PERIPH_TIMER1); //Ativando o timer 1 como one-shot
   // Wait for the Timer0 module to be ready.
-  while(!SysCtlPeripheralReady(SYSCTL_PERIPH_TIMER0)){}
+  while(!SysCtlPeripheralReady(SYSCTL_PERIPH_TIMER0)&&!SysCtlPeripheralReady(SYSCTL_PERIPH_TIMER1)){}
   // Configure TimerA and B 
   TimerConfigure(TIMER0_BASE, (TIMER_CFG_SPLIT_PAIR | TIMER_CFG_A_CAP_TIME_UP | TIMER_CFG_B_CAP_TIME_UP));
+  TimerConfigure(TIMER1_BASE, TIMER_CFG_A_ONE_SHOT);
+  TimerLoadSet(TIMER1_BASE, TIMER_A, TIMEOUT_VALUE);
   // Set both timers to start at zero
   // TimerA triggers on positive edge, TimerB triggers on negative edge
   TimerControlEvent(TIMER0_BASE, TIMER_A, TIMER_EVENT_POS_EDGE);
@@ -69,19 +79,19 @@ void initTimers(){
   //Registers a interrupt function to be called when timer b hits a neg edge event
     TimerIntRegister(TIMER0_BASE, TIMER_A, onEdgeUp); 
     TimerIntRegister(TIMER0_BASE, TIMER_B, onEdgeDown); 
+    TimerIntRegister(TIMER1_BASE, TIMER_A, onTimeOut); 
    
     // Makes sure the interrupt is cleared
     TimerIntClear(TIMER0_BASE, TIMER_CAPA_EVENT);
     TimerIntClear(TIMER0_BASE, TIMER_CAPB_EVENT);
+    TimerIntClear(TIMER1_BASE, TIMER_TIMA_TIMEOUT);
    
     // Enable the indicated timer interrupt source.
     TimerIntEnable(TIMER0_BASE, TIMER_CAPA_EVENT);
     TimerIntEnable(TIMER0_BASE, TIMER_CAPB_EVENT);
+    TimerIntEnable(TIMER1_BASE, TIMER_TIMA_TIMEOUT);
 }
 
-int sample_high[SAMPLE_SIZE], sample_low[SAMPLE_SIZE];   
-int high_index=0;
-int low_index=0; 
 
 void onEdgeDown(void) {
 
@@ -101,21 +111,32 @@ void onEdgeUp(void) {
   TimerIntClear(TIMER0_BASE, TIMER_CAPA_EVENT);
 }
 
+void onTimeOut(void) {
+  timeout_flag = 1;
+  TimerIntClear(TIMER1_BASE, TIMER_TIMA_TIMEOUT);
+}
+
+
 void main(void){
   
   setClockFrequency(BASE_FREQUENCY);
   initUART();
   initTimers();
- 
-  while(GPIOPinRead(GPIO_PORTD_BASE, GPIO_PIN_0) != GPIO_PIN_0); //Hipótese André, comentar depois de teste inicial
+ // while(GPIOPinRead(GPIO_PORTD_BASE, GPIO_PIN_0) != GPIO_PIN_0); //Hipótese André, comentar depois de teste inicial
   TimerEnable(TIMER0_BASE, TIMER_BOTH);
-  UARTprintf("TimerA %d TimerB: %d  \n", TimerValueGet(TIMER0_BASE, TIMER_A), TimerValueGet(TIMER0_BASE, TIMER_B));  
-    
-  while(high_index<SAMPLE_SIZE && low_index<SAMPLE_SIZE){ }
+  TimerEnable(TIMER1_BASE, TIMER_BOTH);
 
-  for (int i = 1; i<SAMPLE_SIZE; i++){
-    UARTprintf("Amostra: %2d frequencia: %8d Hz ciclo: %3d  \n", i, 1000000000/((sample_high[i]*1000/FREQUENCY_MEGA)+(sample_low[i]*1000/FREQUENCY_MEGA)), sample_high[i]*100/(sample_high[i]+sample_low[i]));
+  //Captura das amostras 
+  while(high_index< SAMPLE_SIZE && low_index<SAMPLE_SIZE){
+    if (high_index> 0 || low_index > 0) TimerDisable(TIMER1_BASE, TIMER_BOTH);
+    else if (timeout_flag = 1 &&  ! (high_index> 0 || low_index > 0)) timeout_flag = 0 ; //segurança
   }
   
+  if (timeout_flag == 0){
+    for (int i = 1; i<SAMPLE_SIZE; i++){
+    //f = 1000000000/((sample_high[i]*1000/FREQUENCY_MEGA)+(sample_low[i]*1000/FREQUENCY_MEGA));
+      UARTprintf("%2d: ciclo: %3d  \n", i, sample_high[i]*100/(sample_high[i]+sample_low[i]));
+    }
+  } else UARTprintf("Timeout atingido :( \n");
   while(1);
 } 
