@@ -13,8 +13,8 @@
 #include "driverlib/pin_map.h"
 
 //#define BASE_FREQUENCY 24000000
-#define BASE_FREQUENCY 24000000
-#define FREQUENCY_MEGA 24
+#define BASE_FREQUENCY 120000000
+#define FREQUENCY_MEGA 120
 #define SAMPLE_SIZE 11
 
 void onEdgeDown(void);
@@ -114,7 +114,7 @@ void main(void){
   while(high_index<SAMPLE_SIZE && low_index<SAMPLE_SIZE){ }
 
   for (int i = 1; i<SAMPLE_SIZE; i++){
-    UARTprintf("Amostra: %d Tempo em alta: %d us Tempo em baixa: %d us ciclo: %d  \n", i, (sample_high[i]/FREQUENCY_MEGA), (sample_low[i]/FREQUENCY_MEGA), sample_high[i]*100/(sample_high[i]+sample_low[i]));
+    UARTprintf("Amostra: %2d frequencia: %8d Hz ciclo: %3d  \n", i, 1000000000/((sample_high[i]*1000/FREQUENCY_MEGA)+(sample_low[i]*1000/FREQUENCY_MEGA)), sample_high[i]*100/(sample_high[i]+sample_low[i]));
   }
   
   while(1);
