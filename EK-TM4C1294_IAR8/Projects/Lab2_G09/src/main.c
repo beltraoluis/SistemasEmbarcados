@@ -107,7 +107,7 @@ void main(void){
   initUART();
   initTimers();
  
-  while(GPIOPinRead(GPIO_PORTD_BASE, GPIO_PIN_0) != GPIO_PIN_0); //Hipótese André, comentar depois de teste
+  while(GPIOPinRead(GPIO_PORTD_BASE, GPIO_PIN_0) != GPIO_PIN_0); //Hipótese André, comentar depois de teste inicial
   TimerEnable(TIMER0_BASE, TIMER_BOTH);
   UARTprintf("TimerA %d TimerB: %d  \n", TimerValueGet(TIMER0_BASE, TIMER_A), TimerValueGet(TIMER0_BASE, TIMER_B));  
     
