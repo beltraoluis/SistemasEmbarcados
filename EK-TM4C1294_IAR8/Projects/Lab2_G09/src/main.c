@@ -53,9 +53,6 @@ void initTimers(){
   TimerControlEvent(TIMER0_BASE, TIMER_A, TIMER_EVENT_POS_EDGE);
   TimerControlEvent(TIMER0_BASE, TIMER_B, TIMER_EVENT_NEG_EDGE);
   
-  // Enable the timers.
-  //TimerEnable(TIMER0_BASE, TIMER_BOTH); <--Tirei daqui pra testar uma coisa
-  
   /////Configurações do Pino D0 e D1 -------------------------------------------
   //Enable para os periféricos
   SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOD);
@@ -112,10 +109,12 @@ void main(void){
   UARTprintf("TimerA %d TimerB: %d  \n", TimerValueGet(TIMER0_BASE, TIMER_A), TimerValueGet(TIMER0_BASE, TIMER_B));  
     
   while(high_index<SAMPLE_SIZE && low_index<SAMPLE_SIZE){ }
+  int f = 0;
+  int duty = 0;
 
   for (int i = 1; i<SAMPLE_SIZE; i++){
-    UARTprintf("Amostra: %2d frequencia: %8d Hz ciclo: %3d  \n", i, 1000000000/((sample_high[i]*1000/FREQUENCY_MEGA)+(sample_low[i]*1000/FREQUENCY_MEGA)), sample_high[i]*100/(sample_high[i]+sample_low[i]));
+    //f = 1000000000/((sample_high[i]*1000/FREQUENCY_MEGA)+(sample_low[i]*1000/FREQUENCY_MEGA));
+    UARTprintf("%2d: ciclo: %3d  \n", i, sample_high[i]*100/(sample_high[i]+sample_low[i]));
   }
-  
   while(1);
 } 
