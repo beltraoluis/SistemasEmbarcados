@@ -1,22 +1,22 @@
-"C:\Users\beltr\OneDrive\Alfa\UTFPR\Embarcados\EK-TM4C1294_IAR8\TivaWare_C_Series-2.1.4.178\driverlib\hibernate.c"
+"C:\Users\Lucas S. Kloss Teles\Dev\SistemasEmbarcados\EK-TM4C1294_IAR8\TivaWare_C_Series-2.1.4.178\driverlib\hibernate.c"
 -std=c11
 -ferror-limit=0
 -fbracket-depth=512
 -MD
 -MF
-C:\Users\beltr\OneDrive\Alfa\UTFPR\Embarcados\EK-TM4C1294_IAR8\TivaWare_C_Series-2.1.4.178\driverlib\ewarm\Obj\hibernate.pbi.dep
+C:\Users\Lucas S. Kloss Teles\Dev\SistemasEmbarcados\EK-TM4C1294_IAR8\TivaWare_C_Series-2.1.4.178\driverlib\ewarm\Obj\hibernate.pbi.dep
 -o
 hibernate.pbi
 -I
-C:\Users\beltr\OneDrive\Alfa\UTFPR\Embarcados\EK-TM4C1294_IAR8\TivaWare_C_Series-2.1.4.178\driverlib
+C:\Users\Lucas S. Kloss Teles\Dev\SistemasEmbarcados\EK-TM4C1294_IAR8\TivaWare_C_Series-2.1.4.178\driverlib
 -I
-C:\Users\beltr\OneDrive\Alfa\UTFPR\Embarcados\EK-TM4C1294_IAR8\TivaWare_C_Series-2.1.4.178\driverlib\..
+C:\Users\Lucas S. Kloss Teles\Dev\SistemasEmbarcados\EK-TM4C1294_IAR8\TivaWare_C_Series-2.1.4.178\driverlib\..
 -I
-C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.3\arm\inc
+C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.3_2\arm\inc
 -I
-C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.3\arm\inc\c
+C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.3_2\arm\inc\c
 -I
-C:\Users\beltr\OneDrive\Alfa\UTFPR\Embarcados\EK-TM4C1294_IAR8\TivaWare_C_Series-2.1.4.178
+C:\Users\Lucas S. Kloss Teles\Dev\SistemasEmbarcados\EK-TM4C1294_IAR8\TivaWare_C_Series-2.1.4.178
 -D__CHAR_BITS__=8
 -D__CHAR_MAX__=0xff
 -D__CHAR_MIN__=0
@@ -167,8 +167,8 @@ C:\Users\beltr\OneDrive\Alfa\UTFPR\Embarcados\EK-TM4C1294_IAR8\TivaWare_C_Series
 -D__JMP_BUF_ELEMENT_TYPE__=unsigned long long int
 -D__JMP_BUF_NUM_ELEMENTS__=16
 -D__TID__=0xcf60
--D__VER__=8040001
--D__BUILD_NUMBER__=212
+-D__VER__=8040002
+-D__BUILD_NUMBER__=214
 -D__IAR_SYSTEMS_ICC__=9
 -D_MAX_ALIGNMENT=8
 -D__LITTLE_ENDIAN__=1
@@ -262,8 +262,8 @@ C:\Users\beltr\OneDrive\Alfa\UTFPR\Embarcados\EK-TM4C1294_IAR8\TivaWare_C_Series
 -D__HAS_JOINED_TYPES__=1
 -D__HAS_LOCATED_DECLARATION__=1
 -D__HAS_LOCATED_WITH_INIT__=1
--D__IAR_COMPILERBASE__=656644
--D__IAR_COMPILERBASE_STR__=10.5.4.1177
+-D__IAR_COMPILERBASE__=656646
+-D__IAR_COMPILERBASE_STR__=10.5.6.1181
 -D__UNICODE_SOURCE_SUPPORTED__=1
 -D__VTABLE_MEM__=
 -D__PRAGMA_REDEFINE_EXTNAME=1
@@ -310,9 +310,9 @@ C:\Users\beltr\OneDrive\Alfa\UTFPR\Embarcados\EK-TM4C1294_IAR8\TivaWare_C_Series
 -D__EDG_INT128_EXTENSIONS_ALLOWED=0
 -Dewarm=1
 -DPART_TM4C1294NCPDT=1
--D_DLIB_CONFIG_FILE_HEADER_NAME="C:\\Program Files (x86)\\IAR Systems\\Embedded Workbench 8.3\\arm\\inc\\c\\DLib_Config_Normal.h"
--D_DLIB_CONFIG_FILE_STRING="C:\\Program Files (x86)\\IAR Systems\\Embedded Workbench 8.3\\arm\\inc\\c\\DLib_Config_Normal.h"
--D__VERSION__="IAR ANSI C/C++ Compiler V8.40.1.212/W32 for ARM"
+-D_DLIB_CONFIG_FILE_HEADER_NAME="C:\\Program Files (x86)\\IAR Systems\\Embedded Workbench 8.3_2\\arm\\inc\\c\\DLib_Config_Normal.h"
+-D_DLIB_CONFIG_FILE_STRING="C:\\Program Files (x86)\\IAR Systems\\Embedded Workbench 8.3_2\\arm\\inc\\c\\DLib_Config_Normal.h"
+-D__VERSION__="IAR ANSI C/C++ Compiler V8.40.2.214/W32 for ARM"
 -D_VA_DEFINED=
 -D_VA_LIST=struct __va_list
 -D__ICCARM_OLD_DEFINED_VAARGS__=1
