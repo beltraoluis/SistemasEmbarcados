@@ -18,6 +18,7 @@
 
 #include "elevator.h"
 #include "string_utils.h"
+#include "ordered_list.h"
 
 uint32_t tickCount;
 
@@ -82,10 +83,6 @@ void controlTask(void *arg0){
   osCentralElevatorMessageQueue_id = osMessageQueueNew(BUFFER, sizeof(msg), NULL);
   
   elev_e.level = 'a';
-  for (uint8_t i = 0; i < 15 ; i++) {
-    elev_e.upNextLevel[i] = 'r';
-    elev_e.downNextLevel[i] = 'r';
-  }
   elev_e.name = 'e';
   elev_e.osMessageQueue_id = osLeftElevatorMessageQueue_id;
   elev_e.osMsgControl_id = controlMessageQueue;
@@ -93,10 +90,6 @@ void controlTask(void *arg0){
   elev_e.prevMovState = GOING_UP;
   
   elev_c.level = 'a';
-  for (uint8_t i = 0; i < 15 ; i++) {
-    elev_c.upNextLevel[i] = 'r';
-    elev_c.downNextLevel[i] = 'r';
-  }
   elev_c.name = 'c';
   elev_c.osMessageQueue_id = osCentralElevatorMessageQueue_id;
   elev_c.osMsgControl_id = controlMessageQueue;
@@ -104,10 +97,6 @@ void controlTask(void *arg0){
   elev_c.prevMovState = GOING_UP;
   
   elev_d.level = 'a';
-  for (uint8_t i = 0; i < 15 ; i++) {
-    elev_d.upNextLevel[i] = 'r';
-    elev_d.downNextLevel[i] = 'r';
-  }
   elev_d.name = 'd';
   elev_d.osMessageQueue_id = osRightElevatorMessageQueue_id;
   elev_d.osMsgControl_id = controlMessageQueue;
@@ -204,13 +193,13 @@ void changeState(Elevator *elev, char command[], char * str){
       if(command[0] == elev->name && command[1] == 'F'){
         char tmp[4] = "xx\r";
         tmp[0] = elev->name;
-        if (elev->prevMovState == GOING_UP && elev->upNextLevel[0] != 'r') {    // necessário para saber se continua subindo ou começa descida
+        if (elev->prevMovState == GOING_UP && char_set_size(elev->upNextLevel) != 0) {    // necessário para saber se continua subindo ou começa descida
           tmp[1] = 's'; // subir
           elev->state = GOING_UP;
-        } else if (elev->prevMovState == GOING_DOWN && elev->downNextLevel[0] != 'r') {
+        } else if (elev->prevMovState == GOING_DOWN && char_set_size(elev->downNextLevel) != 0) {
           tmp[1] = 'd'; // descer
           elev->state = GOING_DOWN;
-        } else if (elev->upNextLevel[0] != 'r') {
+        } else if (char_set_size(elev->upNextLevel) != 0) {
           tmp[1] = 's'; // subir
           elev->state = GOING_UP;
         } else {
@@ -227,7 +216,7 @@ void changeState(Elevator *elev, char command[], char * str){
       if(command[0] == elev->name && command[1] == 'A'){ // aguarda a porta abrir
         elev->state = STOPPED_OPEN_DOORS;
         removeFirstElementFromQueue(elev);
-        if (elev->upNextLevel[0] != 'r' || elev->downNextLevel[0] != 'r') {
+        if (char_set_size(elev->upNextLevel) != 0 || char_set_size(elev->upNextLevel) != 0) {
           tickCount = osKernelGetTickCount();
           closeDoor(command, str);
           osDelayUntil(2000 + tickCount);
@@ -240,7 +229,7 @@ void changeState(Elevator *elev, char command[], char * str){
     case GOING_UP:
     case GOING_DOWN:
       char currentLevel = strMap(command);
-      if(command[0] == elev->name && ((elev->state == GOING_UP && currentLevel == elev->upNextLevel[0]) || (elev->state == GOING_DOWN && currentLevel == elev->downNextLevel[0]))){
+      if(command[0] == elev->name && ((elev->state == GOING_UP && currentLevel == elev->upNextLevel->data) || (elev->state == GOING_DOWN && currentLevel == elev->downNextLevel->data))){
         char tmp[4] = "xp\r";
         tmp[0] = elev->name;
         elev->prevMovState = elev->state;

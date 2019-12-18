@@ -8,6 +8,7 @@
 
 #include <string.h>
 #include "cmsis_os2.h" // CMSIS-RTOS
+#include "ordered_list.h"
 
 #ifndef __ELEVATOR__
 #define __ELEVATOR__
@@ -16,8 +17,8 @@
 
 typedef struct elevator{
     char level;
-    char upNextLevel[15];
-    char downNextLevel[15];
+    char_node *upNextLevel;
+    char_node *downNextLevel;
     char name;
     // ver state_machine.h
     int state;

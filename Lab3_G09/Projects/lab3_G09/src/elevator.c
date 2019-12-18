@@ -87,43 +87,21 @@ char strMap(char *str){
 void addElementToQueue(Elevator *elev, char elem) {
   char tmp[15];
   if ((int)elev->level < (int)elem) {
-     for (uint8_t i = 0; i < 15 ; i++) {
-      if (elev->upNextLevel[i] == 'r') {
-        elev->upNextLevel[i] = elem;
-        break;
-      }
-    }
-//    strncpy(tmp, elev->upNextLevel, 15);
-//    qsort(tmp, 15, sizeof(char), cmpfunc);
-//    for (uint8_t i = 0; i < 15 ; i++) {
-//      elev->upNextLevel[i] = tmp[i];
-//    }
+    char_set_add(&(elev->upNextLevel),elem);
   } else {
-    for (uint8_t i = 0; i < 15 ; i++) {
-      if (elev->downNextLevel[i] == 'r') {
-        elev->downNextLevel[i] = elem;
-        break;
-      }
-    }
-    //todo: ordenar array
+    char_set_add(&(elev->downNextLevel),elem);
   }
 }
 
 void removeFirstElementFromQueue(Elevator *elev) {
   switch(elev->prevMovState){
-   case GOING_UP:
-      for (uint8_t i = 0; i < 15; i++) {
-        elev->upNextLevel[i] = elev->upNextLevel[i+1];
-      }
-      elev->upNextLevel[14] = 'r'; 
-   break;
-     case GOING_DOWN:   
-      for (uint8_t i = 0; i < 15; i++) {
-        elev->downNextLevel[i] = elev->downNextLevel[i+1];
-      }
-      elev->downNextLevel[14] = 'r';  
-   break;
-   default: break;
+    case GOING_UP:
+      char_set_remove(&(elev->upNextLevel));
+      break;
+    case GOING_DOWN:
+      char_set_remove(&(elev->downNextLevel));
+      break;
+    default: break;
   }
 }
 
